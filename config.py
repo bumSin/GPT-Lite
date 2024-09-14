@@ -1,0 +1,26 @@
+from dataclasses import dataclass
+
+@dataclass
+class Config:
+    d_model: int = 768
+    eps: float = 1e-5
+
+class ConfigManager:
+    _instance = None
+
+    @classmethod
+    def get_config(cls):
+        if cls._instance is None:
+            cls._instance = Config()  # Instantiates only once
+        return cls._instance
+
+
+'''
+Usage:
+class SomeModel:
+    def __init__(self):
+        self.cfg = ConfigManager.get_config()
+        print(self.cfg.d_model)  # Use the config values
+
+model = SomeModel()
+'''
