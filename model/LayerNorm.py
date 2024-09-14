@@ -19,8 +19,8 @@ Here, we normalise every token independently.
 '''
 
 class LayerNorm(nn.Module):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.cfg = ConfigManager.get_config()
 
         self.w = nn.Parameter(torch.ones(self.cfg.d_model))    # gamma; scale

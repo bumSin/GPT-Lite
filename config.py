@@ -4,6 +4,8 @@ from dataclasses import dataclass
 class Config:
     d_model: int = 768
     eps: float = 1e-5
+    d_vocab: int = 50257
+    init_range: float = 0.02
 
 class ConfigManager:
     _instance = None
