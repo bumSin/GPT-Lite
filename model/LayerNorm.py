@@ -23,8 +23,8 @@ class LayerNorm(nn.Module):
         super().__init__(*args, **kwargs)
         self.cfg = ConfigManager.get_config()
 
-        self.w = nn.Parameter(torch.ones(self.cfg.d_model))
-        self.b = nn.Parameter(torch.zeros(self.cfg.d_model))
+        self.w = nn.Parameter(torch.ones(self.cfg.d_model))    # gamma; scale
+        self.b = nn.Parameter(torch.zeros(self.cfg.d_model))   # beta:  bias
 
     def forward(self, x):
         # expected dim of x: batch, seq_len, d_model
@@ -35,7 +35,8 @@ class LayerNorm(nn.Module):
         token_var = einops.reduce((x - token_mean).pow(2), "batch seq_len d_model -> batch seq_len 1", "mean")
         #         = torch.var(x, dim = -1, keepdim=True)
 
-        normalised_x = (x - token_mean) / (token_var + self.cfg.eps)    # eps is a very small value added to prevent division by zero if by chance var is 0
+        # To normalise, we divide by std deviation, which is sqrt of var
+        normalised_x = (x - token_mean) / torch.sqrt(token_var + self.cfg.eps)    # eps is a very small value added to prevent division by zero if by chance var is 0
         normalised_x = normalised_x * self.w + self.b
 
         return normalised_x
