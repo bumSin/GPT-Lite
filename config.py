@@ -10,6 +10,7 @@ class Config:
     n_heads: int = 12
     d_head: int = 64
     d_mlp: int = 3072
+    n_layers: int = 12
 
 class ConfigManager:
     _instance = None

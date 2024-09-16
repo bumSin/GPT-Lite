@@ -18,7 +18,7 @@ class Block(nn.Module):
 
     def forward(self, resid_in):
         '''
-        Input is read from residual stream with dim: (batch, seq_len, d_model)
+        resid_in is read from residual stream with dim: (batch, seq_len, d_model)
 
         :param x:
         :return:
@@ -32,11 +32,11 @@ class Block(nn.Module):
         norm_x = self.layer_norm2(resid_mid)
         ff_x = self.feedForward(norm_x)
 
-        resid_out = resid_mid + ff_x
+        resid_out = resid_mid + ff_x          # Writing to residual stream
 
         return resid_out
-
-blck = Block()
-x = torch.randn(200, 10, 768)
-x = blck(x)
-print(x.shape)
+#
+# blck = Block()
+# x = torch.randn(200, 10, 768)
+# x = blck(x)
+# print(x.shape)
