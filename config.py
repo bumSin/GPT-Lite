@@ -9,6 +9,7 @@ class Config:
     n_ctx: int = 1024
     n_heads: int = 12
     d_head: int = 64
+    d_mlp: int = 3072
 
 class ConfigManager:
     _instance = None
