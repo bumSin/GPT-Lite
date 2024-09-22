@@ -6,6 +6,28 @@ from fancy_einsum import einsum
 
 from config import ConfigManager
 
+'''
+1. Calculate Attention Pattern
+   * Linearly transform x to get Q and K vectors
+       - Remember every token has it's own set of Q, K and V vectors
+   * Split them across token dimension for each head
+       - If there are 24 words, each head will all 24 words but partially, each head will get d_model/num_heads part of the token
+       - use einsum to do the above two steps in one line
+   * Within each head, multiply all Q vectors with all K vectors to get the atention score
+   * Apply causal mask
+   * Softmax row-wise to convert scores into probabilities --> These probabilities represents which tokens attend to which other tokens and how much
+
+2. Information flow among tokens within each head
+   * Linealy transform x to get V vector
+   * User attention pattern as weights and take the weighted average of V for every token to get z
+   * Add outputs of all heads [Attention is additive here]
+       - NOTE: This is a little different from actual implementation of GPT-2. 
+       - In GPT-2’s architecture, the outputs of the attention heads are concatenated and then linearly projected, which is different from adding the outputs.
+       - But apparently it's mathematically equivalent, so let it be.
+   * Linearly transform to match the dimensions of residual stream
+
+'''
+
 
 class MultiHeadAttention(nn.Module):
     def __init__(self):
@@ -59,29 +81,6 @@ class MultiHeadAttention(nn.Module):
         mask = torch.triu(torch.ones(attn_scores.size(-1), attn_scores.size(-1)), diagonal = 1).bool()
         attn_scores.masked_fill_(mask, self.IGNORE)
         return attn_scores
-
-
-'''
-1. Calculate Attention Pattern
-   * Linearly transform x to get Q and K vectors
-       - Remember every token has it's own set of Q, K and V vectors
-   * Split them across token dimension for each head
-       - If there are 24 words, each head will all 24 words but partially, each head will get d_model/num_heads part of the token
-       - use einsum to do the above two steps in one line
-   * Within each head, multiply all Q vectors with all K vectors to get the atention score
-   * Apply causal mask
-   * Softmax row-wise to convert scores into probabilities --> These probabilities represents which tokens attend to which other tokens and how much
-
-2. Information flow among tokens within each head
-   * Linealy transform x to get V vector
-   * User attention pattern as weights and take the weighted average of V for every token to get z
-   * Add outputs of all heads [Attention is additive here]
-       - NOTE: This is a little different from actual implementation of GPT-2. 
-       - In GPT-2’s architecture, the outputs of the attention heads are concatenated and then linearly projected, which is different from adding the outputs.
-       - But apparently it's mathematically equivalent, so let it be.
-   * Linearly transform to match the dimensions of residual stream
-
-'''
 
 
 # attn = MultiHeadAttention()

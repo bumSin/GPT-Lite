@@ -7,6 +7,15 @@ I had fun implementing this and I have documented my learnings here --> //: blog
 
 This repo follows the principles outlined in the original GPT-2 architecture but provides flexibility for further experimentation and fine-tuning. The model architecture is built around multi-head self-attention and transformer blocks, making it powerful for generating coherent and contextually aware text.
 
+## Params
+```python
+total_params = count_parameters(GPTLite)
+print(f"Total number of trainable parameters: {total_params}")
+```
+
+This model has **163 Million** parameters
+
+
 ## Model Overview
 
 The GPT-2 styled model is a decoder-only transformer designed for natural language generation tasks. It generates text one token at a time by predicting the next token in the sequence, conditioned on all previously generated tokens.
@@ -77,3 +86,5 @@ The model is trained using the cross-entropy loss function, where the goal is to
 Given a sequence of tokens, the model encodes the input into a hidden representation using embeddings. Then, each token attends to every other token (self-attention), using information from the past (but not the future due to the causal mask). The model repeats this process for each transformer block, refining the hidden representations.
 
 After processing through all blocks, the final layer generates a probability distribution over the vocabulary, predicting the next token in the sequence. The process repeats recursively for autoregressive text generation.
+
+## Training

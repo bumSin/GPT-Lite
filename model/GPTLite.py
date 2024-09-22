@@ -46,4 +46,11 @@ class GPTLite(nn.Module):
 # x = torch.randint(0, 512, (4, 10))
 #
 # logits = transformer(x)
-# print(logits.shape)
+#
+# def count_parameters(model):
+#     return sum(p.numel() for p in model.parameters() if p.requires_grad)
+#
+# # Example usage:
+# total_params = count_parameters(GPTLite)
+# print(f"Total number of trainable parameters: {total_params}")
+# Output = 163,087,441    # Real GPT-2 had 1.5 billion params
